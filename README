@@ -4,6 +4,9 @@ Prototype code for sparc.sh
 No backend implemented yet
 Written by Leon Krieg
 
+NOTE: Every change of the main branch will get deployed
+to the production ftp server via github workflows.
+
 TODO: Write backend
 TODO: Git / FTP / RSS Interface
 TODO: Answer curl with install script
