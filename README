@@ -1,9 +1,11 @@
 # README
 
-Code for sparc.sh website
+Prototype code for sparc.sh
+No backend implemented yet
 Written by Leon Krieg
 
-TODO: Write PHP backend
-TODO: Git / FTP Interface
-TODO: Check layout on mobile
+TODO: Write backend
+TODO: Git / FTP / RSS Interface
+TODO: Answer curl with install script
+TODO: Check layout on mobile, ugh
 TODO: CSS cleanup
