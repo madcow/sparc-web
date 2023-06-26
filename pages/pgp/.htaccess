@@ -1,0 +1,2 @@
+RewriteEngine on 
+RewriteRule ^(.*)$ https://pgp.sparc.sh/public.pgp [R=301,L]
