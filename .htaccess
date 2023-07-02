@@ -1,0 +1,4 @@
+RewriteEngine on
+
+RewriteCond %{HTTP_USER_AGENT} curl
+RewriteRule ^(.*) https://ftp.sparc.sh/install.sh [L,R]
