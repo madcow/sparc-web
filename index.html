@@ -61,8 +61,8 @@ system:</p><code class="code-shell">curl -sSL https://sparc.sh | sh</code>
 
 <p>The prefered way is to download the builds from the ftp
 server at ftp.sparc.sh and to verify checksums like so:</p>
-<code class="code-shell">curl -sOL https://ftp.sparc.sh/latest.sha256
-curl -sSL https://ftp.sparc.sh/latest.tar.gz | tar xz
+<code class="code-shell">curl -sO https://ftp.sparc.sh/latest.sha256
+curl -sS https://ftp.sparc.sh/latest.tar.gz | tar xz
 sha256sum -c latest.sha256</code>
 
 <p>Or if you want to build from source, you can use the
