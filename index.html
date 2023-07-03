@@ -61,8 +61,8 @@ system:</p><code class="code-shell">curl -sSL https://sparc.sh | sh</code>
 
 <p>The prefered way is to download the builds from the ftp
 server at ftp.sparc.sh and to verify checksums like so:</p>
-<code class="code-shell">curl -O https://ftp.sparc.sh/latest.sha256
-curl -L https://ftp.sparc.sh/latest.tar.gz | tar xz
+<code class="code-shell">curl -sOL https://ftp.sparc.sh/latest.sha256
+curl -sSL https://ftp.sparc.sh/latest.tar.gz | tar xz
 sha256sum -c latest.sha256</code>
 
 <p>Or if you want to build from source, you can use the
@@ -104,6 +104,33 @@ SDL2. Maybe Android and Xbox can be supported later.
 Porting should be fairly straightforward.</p>
 </section>
 
+<section class="command" id="sparc-command">
+<h2>Command-line</h2>
+<p>GAS has a simple command-line interface which can also
+be used to do some game library housekeeping. See
+doc/SCRIPTING for more info.</p>
+<code class="code-shell">gas [options] [rom-file ..]</code>
+<h3>Options</h3>
+<code class="code-shell">-s, --set <key> <value>
+    Sets variable to specified value. Has priority
+    over any values set in the config file.
+
+-a, --arch <architecture>
+    Sets emulation architecture.
+
+-b, --boot <bios-file>
+    Boots given BIOS file.
+
+-o, --open <rom-file>
+    Loads given ROM file. Can be omitted by listing
+    the files after any command-line options. If
+    none are given the user library is shown.
+
+-v, --version
+    Prints installed version.
+</code>
+</section>
+
 <section class="build" id="sparc-build">
 <h2>Build on Linux</h2>
 <p>To build and install this project run the following
@@ -112,7 +139,7 @@ can be set by passing --prefix to the configure script.
 (Sudo might be needed to install depending on the user
 permissions for the selected prefix).</p>
 <code class="code-shell">configure
-make && make install</code>
+make &amp;&amp; make install</code>
 <ul class="todo">
 <li>Win32 build documentation.</li>
 </ul>
