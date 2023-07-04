@@ -57,20 +57,33 @@ soon as the first milestones are completed.</p>
 <h2>Quick Install</h2>
 <p>If you like to live dangerously you can use the command
 below to install the latest nightly build on your Linux
-system:</p><code class="code-shell">curl -sSL https://sparc.sh | sh</code>
-
+system:</p>
+<code class="code-shell">curl -sSL https://sparc.sh | sh</code>
 <p>The prefered way is to download the builds from the ftp
 server at ftp.sparc.sh and to verify checksums like so:</p>
 <code class="code-shell">curl -sO https://ftp.sparc.sh/latest.sha256
 curl -sS https://ftp.sparc.sh/latest.tar.gz | tar xz
 sha256sum -c latest.sha256</code>
-
-<p>Or if you want to build from source, you can use the
-git production server git.sparc.sh (for more info see
-section "Build on Linux"). You can read the docs using
-telnet if you don't want to install the manpage files.</p>
+<h2>Build from Source</h2>
+<p>You can get the latest sources from the git repository
+at git.sparc.sh. There is a telnet manpage server if you
+don't want to install the docs locally. See the next two
+sections on how to proceed with the build.</p>
 <code class="code-shell">git clone git@git.sparc.sh
 telnet man.sparc.sh</code>
+<h3>Linux Build</h3>
+<p>On your first build you need to run the configure script
+to detect your toolchain. You can pass the --prefix=path
+argument to change the installation path. Depending on
+your selected prefix you might need sudo to install.</p>
+<code class="code-shell">cd sparc
+./configure --prefix=/usr
+make &amp;&amp; make install</code>
+<h3>Windows Build</h3>
+<ul class="todo">
+  <li>Windows build documentation.</li>
+</ul>
+</section>
 
 <section class="about" id="sparc-about">
 <h2>About the Project</h2>
@@ -79,14 +92,12 @@ platform abstraction, memory management and provides a
 clean framework for common chips (CPUs, VPDs, PSGs). It
 is the backend for GAS and streamlines the process of
 creating emulators for different operating systems.</p>
-
 <p>GAS runs on top of SPARC and implements the cores for
 each gaming console. Emulation should be as accurate as
 possible while keeping the software simple to use. Most
 things should just work (TM) out of the box as long as
 the user provides their ROM backups for BIOS and games.
 GAS implements the FIREBEE file format see doc/FIREBEE.</p>
-
 <p>An important consideration is portability. Both in the
 binary sense and in regards to how easy it is for the
 user to migrate their files between multiple systems.
@@ -95,7 +106,6 @@ FTP server to keep multiple device states synchronized.
 Savegames are packaged as a single file for each user
 but can be exported back to a format that can be copied
 to original storage devices like memory cards.</p>
-
 <p>There will be no savestates or other capabilities that
 were not present on the original hardware. I am trying
 to stay as true to the real thing as I can.</p>
@@ -104,14 +114,20 @@ SDL2. Maybe Android and Xbox can be supported later.
 Porting should be fairly straightforward.</p>
 </section>
 
-<section class="command" id="sparc-command">
-<h2>Command-line</h2>
+<section class="settings" id="sparc-settings">
+<h2>Settings</h2>
+<p>There are three ways in which you can change how the
+emulator runs: command-line, config files and the RC
+startup script. (Well and a graphical menu later but
+that is just an extension of the config file.)</p>
+
+<h3>Command-line</h3>
 <p>GAS has a simple command-line interface which can also
 be used to do some game library housekeeping. See
 doc/SCRIPTING for more info.</p>
-<code class="code-shell">gas [options] [rom-file ..]</code>
-<h3>Options</h3>
-<code class="code-shell">-s, --set <key> <value>
+<code class="code-shell">gas [options] [rom-file ..]
+
+-s, --set <key> <value>
     Sets variable to specified value. Has priority
     over any values set in the config file.
 
@@ -129,55 +145,83 @@ doc/SCRIPTING for more info.</p>
 -v, --version
     Prints installed version.
 </code>
-</section>
 
-<section class="build" id="sparc-build">
-<h2>Build on Linux</h2>
-<p>To build and install this project run the following
-commands. gcc and make are required. A different prefix
-can be set by passing --prefix to the configure script.
-(Sudo might be needed to install depending on the user
-permissions for the selected prefix).</p>
-<code class="code-shell">configure
-make &amp;&amp; make install</code>
-<ul class="todo">
-<li>Win32 build documentation.</li>
-</ul>
-</section>
-
-<section class="structure" id="sparc-structure">
-<h2>File Structure</h2>
-<h3 class="sub">Global Files</h3>
+<h3>Config File</h3>
+<p>The global settings file is /etc/gas.cfg. By default any
+user settings are kept in $USER/.config/gas/gas.cfg. If
+you prefer to keep all files in a seperate directory from
+the user home you can set rootdir in your config like so:</p>
+<code class="code-shell">rootdir = /tmp/gas/</code>
+<p>Comments start with the hash symbol. Strings don't have
+to be quoted unless you're using the hash symbol as part
+of the value. Values start after the equals symbol until
+simply either the end of line or the start of a comment.
+Strings are considered everything that is not a number
+and not a boolean value.</p>
+<code class="code-shell">
+romdir      = /rom/  # relative to rootdir if set
+loglevel    = debug  # debug, info, warning, error
+fullscreen  = false  # small window for debugging
+xinput      = true   # enable controller input
+width       = 640
+height      = 480
+</code>
 <p>The settings in /etc/gas.conf are overwritten by local
 user settings. They provide default config values in
 case the user has not set those values in their local
 file (or the file do not exist and the program does not
 have permissions to create it).</p>
-<ol class="file-list">
-    <li>/etc/gas.cfg</li>
-    <li>/usr/gas/rom/</li>
-</ol>
 
+<h3>Startup RC Script</h3>
+<p>Startup scripts are most useful for debug purposes and
+also nice for creating small housekeeping scripts. By
+default the script .gasrc in the user directory is run
+when starting GAS:</p>
+<code class="code-shell">
+arch gg
+boot gg-bios.gg
+open gg-shinobi.gg
+arch gb
+boot gb-bios.sms
+open gb-aladdin.sms
+</code>
+<ul class="todo">
+  <li>Script format info.</li>
+</ul>
+</section>
+
+<section class="structure" id="sparc-structure">
+<h2>File Structure</h2>
+<h3>Global Files</h3>
+<p>See section "Settings" for more info on gas.cfg.</p>
+<p>FIXME: Add more info or remove this section since it
+is redundant with the "Settings" section and the ROM
+directory can be set freely in the config file.</p>
+<ol class="file-list">
+  <li>/etc/gas.cfg</li>
+  <li>/usr/gas/rom/</li>
+</ol>
 <h3>User Files</h3>
 <p>Local user files are stored in ~/.local/.share/gas/.
 Saves are packaged together for easier portability but
 can be exported back into the exact same format as on
 real hardware (to write on a memory card for example).</p>
 <ol class="file-list">
-    <li>save.bee</li>
-    <li>conf.cfg</li>
-    <li>rom/</li>
+  <li>save.bee</li>
+  <li>conf.cfg</li>
+  <li>rom/</li>
 </ol>
 <ul class="todo">
-<li>Improve Linux documentation.</li>
-<li>Win32 file system documentation.</li>
+  <li>Improve Linux documentation.</li>
+  <li>Win32 file system documentation.</li>
 </ul>
 </section>
 
 <section class="milestones" id="sparc-milestones">
 <h2>Milestones</h2>
 <ul class="todo">
-<li>Document necessary steps for each milestone.</li>
+  <li>Split up big milestones into smaller ones.</li>
+  <li>Document necessary steps for each milestone.</li>
 </ul>
 <h3>Linux X11, ALSA abstraction layer</h3>
 <h3>Win32 ASIO, WASAPI, XInput abstraction layer</h3>
@@ -209,8 +253,8 @@ real hardware (to write on a memory card for example).</p>
           (Eminem might sue but the name seems fitting)
 </code>
 <ul class="todo">
-<li>Stop thinking of stupid names.</li>
-<li>Documentation.</li>
+  <li>Stop thinking of stupid names.</li>
+  <li>Documentation.</li>
 </ul>
 </section>
 
