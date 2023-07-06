@@ -8,6 +8,7 @@
 
 - Requires apache2 with mod_rewrite enabled.
 - Add host entries to /etc/hosts or use dnsmasq.
+- Trust root certificate data/certs/sparc-ca.crt.
 
 ## /etc/hosts
 
@@ -18,15 +19,27 @@
 ## /etc/apache2/sites-available/sparc.local.conf
 TODO: Switch to lighttpd or nginx
 
-    <VirtualHost *:80>
-        ServerName    localhost
-        ServerAlias   sparc.local *.sparc.local
+    <VirtualHost localhost:443>
+        ServerName    sparc.local
+        ServerAlias   *.sparc.local
         DocumentRoot  /var/www/sparc-web
         ErrorLog      /var/log/sparc-web.log
+
+        SSLEngine              on
+        SSLCertificateFile     /etc/ssl/certs/sparc.local.crt
+        SSLCertificateKeyFile  /etc/ssl/private/sparc.local.key
+
         <Directory /var/www/sparc-web>
-            AllowOverride All
+                AllowOverride All
         </Directory>
     </VirtualHost>
+
+    <VirtualHost *:80>
+        ServerName   sparc.local
+        ServerAlias  *.sparc.local
+        Redirect     / https://sparc.local
+    </VirtualHost>
+
 
 ## .htaccess
 

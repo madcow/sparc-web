@@ -1,0 +1,5 @@
+# Certificates
+
+Here are some dummy certificates to use for the local
+development setup. You can also generate new ones by
+running mkcert.sh. Do not use for production, duh.
