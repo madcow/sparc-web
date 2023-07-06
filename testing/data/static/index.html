@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>sparc</title>
+
+  <!-- <base href="https://sparc.sh/"> -->
+  <link rel="stylesheet" media="screen" href="/css/reset.css">
+  <link rel="stylesheet" media="screen" href="/css/fonts.css">
+  <link rel="stylesheet" media="screen" href="/css/styles.css">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="http://rss.sparc.sh">
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+
+  <meta name="viewport" content="width=520; user-scalable=yes">
+  <meta name="description" content="Software Preservation Architecture">
+  <meta name="author" content="Leon Krieg">
+  <meta name="robots" content="all">
+</head>
+
+<body id="sparc">
+<div class="page-wrapper">
+
+<section class="intro" id="sparc-intro">
+<p class="ascii" id="sparc-logo-ascii">
+   _____ _____        _____   _____
+  / ____|  __ \ /\   |  __ \ / ____|
+ | (___ | |__) /  \  | |__) | |
+  \___ \|  ___/ /\ \ |  _  /| |
+  ____) | |  / ____ \| | \ \| |____
+ |_____/|_| /_/    \_\_|  \_\\_____|
+</p>
+<p>GAS    Game Archive System running on the
+SPARC  Software Preservation Architecture
+       Written in C for Windows and Linux
+       by Leon Krieg &lt;info@madcow.dev&gt;
+</p>
+
+<p>License undetermined right now. Not to be confused with
+GNU assembler (If this overwrites your assembler config
+don't send me an angry email). Sources are published as
+soon as the first milestones are completed.</p>
+</section>
+
+<section class="main" id="sparc-main">
+  <nav class="navbar" id="sparc-main-navbar">
+    <ol class="navbar-list">
+      <li><a href="https://ftp.sparc.sh">Releases</a></li>
+      <li><a href="https://git.sparc.sh">Sources</a></li>
+      <li><a href="https://github.com/madcow/sparc">Mirror</a></li>
+      <li><a href="https://pgp.sparc.sh">PGP</a></li>
+      <li><a href="https://rss.sparc.sh">RSS</a></li>
+    </ol>
+  </nav>
+</section>
+
+<section class="install" id="sparc-install">
+<h2>Quick Install</h2>
+<p>If you like to live dangerously you can use the command
+below to install the latest nightly build on your Linux
+system:</p>
+<code class="code-shell">curl -sSL https://sparc.sh | sh</code>
+<p>The prefered way is to download the builds from the ftp
+server at ftp.sparc.sh and to verify checksums like so:</p>
+<code class="code-shell">curl -sO https://ftp.sparc.sh/latest.sha256
+curl -sS https://ftp.sparc.sh/latest.tar.gz | tar xz
+sha256sum -c latest.sha256</code>
+<h2>Build from Source</h2>
+<p>You can get the latest sources from the git repository
+at git.sparc.sh. There is a telnet manpage server if you
+don't want to install the docs locally. See the next two
+sections on how to proceed with the build.</p>
+<code class="code-shell">git clone git@git.sparc.sh
+telnet man.sparc.sh</code>
+<h3>Linux Build</h3>
+<p>On your first build you need to run the configure script
+to detect your toolchain. You can pass the --prefix=path
+argument to change the installation path. Depending on
+your selected prefix you might need sudo to install.</p>
+<code class="code-shell">cd sparc
+./configure --prefix=/usr
+make &amp;&amp; make install</code>
+<h3>Windows Build</h3>
+<ul class="todo">
+  <li>Windows build documentation.</li>
+</ul>
+</section>
+
+<section class="about" id="sparc-about">
+<h2>About the Project</h2>
+<p>SPARC is an unified emulation architecture. It handles
+platform abstraction, memory management and provides a
+clean framework for common chips (CPUs, VPDs, PSGs). It
+is the backend for GAS and streamlines the process of
+creating emulators for different operating systems.</p>
+<p>GAS runs on top of SPARC and implements the cores for
+each gaming console. Emulation should be as accurate as
+possible while keeping the software simple to use. Most
+things should just work (TM) out of the box as long as
+the user provides their ROM backups for BIOS and games.
+GAS implements the FIREBEE file format see doc/FIREBEE.</p>
+<p>An important consideration is portability. Both in the
+binary sense and in regards to how easy it is for the
+user to migrate their files between multiple systems.
+Savegames and config can be stored on a user provided
+FTP server to keep multiple device states synchronized.
+Savegames are packaged as a single file for each user
+but can be exported back to a format that can be copied
+to original storage devices like memory cards.</p>
+<p>There will be no savestates or other capabilities that
+were not present on the original hardware. I am trying
+to stay as true to the real thing as I can.</p>
+<p>SPARC runs on Windows and Linux either natively or with
+SDL2. Maybe Android and Xbox can be supported later.
+Porting should be fairly straightforward.</p>
+</section>
+
+<section class="settings" id="sparc-settings">
+<h2>Settings</h2>
+<p>There are three ways in which you can change how the
+emulator runs: command-line, config files and the RC
+startup script. (Well and a graphical menu later but
+that is just an extension of the config file.)</p>
+
+<h3>Command-line</h3>
+<p>GAS has a simple command-line interface which can also
+be used to do some game library housekeeping. See
+doc/SCRIPTING for more info.</p>
+<code class="code-shell">gas [options] [rom-file ..]
+
+-s, --set &lt;key&gt; &lt;value&gt;
+    Sets variable to specified value. Has priority
+    over any values set in the config file.
+
+-a, --arch &lt;architecture&gt;
+    Sets emulation architecture.
+
+-b, --boot &lt;bios-file&gt;
+    Boots given BIOS file.
+
+-o, --open &lt;rom-file&gt;
+    Loads given ROM file. Can be omitted by listing
+    the files after any command-line options. If
+    none are given the user library is shown.
+
+-v, --version
+    Prints installed version.
+</code>
+
+<h3>Config File</h3>
+<p>The global settings file is /etc/gas.cfg. By default the
+user overwrites can be found in $HOME/.gas/user.cfg. If
+you would rather keep files seperate from user homes you
+can set rootdir in the global config like so:</p>
+<code class="code-shell">rootdir = /tmp/gas/</code>
+<p>Comments start with the hash symbol. Strings don't have
+to be quoted unless you're using the hash symbol as part
+of the value. Values start after the equals symbol until
+simply either the end of line or the start of a comment.
+Strings are considered everything that is not a number
+and not a boolean value.</p>
+<code class="code-shell">portable     = true      # See "File Paths" section
+loglevel     = debug     # debug, info, warning, error
+biosdir      = /bios/    # BIOS dir relative to rootdir
+romdir       = /roms/    # ROM dir relative to rootdir
+xinput       = true      # Handle controller input
+fullscreen   = false     # Small debug window
+width        = 640
+height       = 480
+</code>
+<p>The settings in /etc/gas.conf are overwritten by local
+user settings. They provide default config values in
+case the user has not set those values in their local
+file (or the file do not exist and the program does not
+have permissions to create it).</p>
+
+<h3>Startup RC Script</h3>
+<p>Startup scripts are most useful for debug purposes and
+also nice for creating small housekeeping scripts. By
+default the script .gasrc in the user directory is run
+when starting GAS:</p>
+<code class="code-shell">arch gg
+boot gg-bios.gg
+open gg-shinobi.gg
+arch gb
+boot gb-bios.sms
+open gb-aladdin.sms
+</code>
+<ul class="todo">
+  <li>Script format info.</li>
+</ul>
+</section>
+
+<section class="paths" id="sparc-paths">
+<h2>File Paths</h2>
+<p>Note that all the paths can be changed from the global
+config file. If there is no gas.cfg in the same folder
+as the executable then the path is /etc/gas.cfg.</p>
+<code class="code-shell">/etc/gas.cfg      # Global settings
+/usr/gas/rom      # Shared ROM files
+$HOME/.gas/
+    /gasrc        # Local RC file
+    /user.cfg     # Local settings
+    /saves.bee    # Save games
+    /bios/        # BIOS files
+    /roms/        # ROM files
+</code>
+<h3>Portable setup</h3>
+<p>If you enable the setting to package user data you only
+need to move around 3-4 files. Use the following command
+to create a portable install in /tmp/gas:</p>
+<code class="code-shell">export DIR=/tmp/gas
+install -d 0755 $DIR
+install -m 0755 /usr/bin/gas $DIR
+cat &lt;&lt;EOF &gt; $DIR/gas.cfg
+    portable = true
+    packuser = true
+    userfile = gas.bee
+    rootdir  = .
+EOF
+</code>
+<p>Run GAS once from the new directory and it should have
+created the structure below. Add your user settings to
+gas.cfg and you could move this folder to an USB drive.</p>
+<code class="code-shell">/tmp/gas
+    /gas.cfg    # Settings file as created above.
+    /gas.bee    # User bios, roms and save games.
+    /gasrc      # Startup script, can be deleted.
+    /gas        # Binaries for different systems.
+</code>
+<ul class="todo">
+  <li>Windows path documentation.</li>
+  <li>TODO: Improve Linux path docs.</li>
+</ul>
+</section>
+
+<section class="milestones" id="sparc-milestones">
+<h2>Milestones</h2>
+<ul class="todo">
+  <li>Split up big milestones into smaller ones.</li>
+  <li>Document necessary steps for each milestone.</li>
+</ul>
+<h3>Linux X11, ALSA abstraction layer</h3>
+<h3>Win32 ASIO, WASAPI, XInput abstraction layer</h3>
+<h3>SDL2  cross-platform (maybe Xbox UWP later?)</h3>
+<h3>Game Gear + Master System emulation</h3>
+<h3>Game Boy (including Color and Advance)</h3>
+<h3>NES / SNES</h3>
+</section>
+
+<section class="junk" id="sparc-junk">
+<h2>Name Ideas</h2>
+<p>Other name ideas ranging from neat to kafkaesque:</p>
+<code class="code-markdown">
+- BEE     Better Emulation Engine. Could be a sweet
+          file extension? 3 letters and can be written
+          in hexadecimal as file signature 0xBEE. It
+          can then be followed by the type nibble 0-F.
+          A valid range of file sub types would then
+          be(e) from 0xBEE0 until 0xBEEF. Where do
+          bees live? Hexagons. Pretty magical, no?
+
+- FIRE    Fully Integrated Retro Emulation
+- GEAR    Game Emulation Architecture
+
+- PIMPLE  Platform Independent Media Preservation and
+          Legacy Emulation (Now we're talking...)
+
+- MENIMEM My Extremly Naive Implementation of Emulators
+          (Eminem might sue but the name seems fitting)
+</code>
+<ul class="todo">
+  <li>Stop thinking of stupid names.</li>
+  <li>Documentation.</li>
+</ul>
+</section>
+
+</div>
+
+</body>
+</html>

@@ -1,4 +1,29 @@
-# README
+# Milestones
 
-TODO: Write backend
-TODO: Git / RSS / telnet
+- README to HTML parser
+- Route curl to install script
+- Git, ftp, rss, telnet interfaces
+
+# Local Development Setup
+
+- Requires apache2 with mod_rewrite enabled.
+- Add host entries to /etc/hosts or use dnsmasq.
+
+## /etc/hosts
+
+    127.0.0.1    sparc.local www.sparc.local
+    127.0.0.1    ftp.sparc.local git.sparc.local
+    127.0.0.1    pgp.sparc.local rss.sparc.local
+
+## /etc/apache2/sites-available/sparc.local.conf
+TODO: Switch to lighttpd or nginx
+
+    <VirtualHost *:80>
+        ServerName    localhost
+        ServerAlias   sparc.local *.sparc.local
+        DocumentRoot  /var/www/sparc-web
+        ErrorLog      /var/log/sparc-web.log
+        <Directory /var/www/sparc-web>
+            AllowOverride All
+        </Directory>
+    </VirtualHost>
