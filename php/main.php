@@ -1,6 +1,7 @@
 <?php
 include "common.php";
 
+// Routing Tests
 function main()
 {
 	$host  = $_SERVER["HTTP_HOST"];
@@ -9,19 +10,13 @@ function main()
 	$url   = $_SERVER["REQUEST_URI"];
 	$sub   = get_sub_domain();
 
-	if (substr($agent, 0, 4) == "curl") {
-		send_file("install.sh");
-	}
-
 	if ($type == "GET") {
 		switch ($url) {
 		case "/git":
 		case "/ftp":
 		case "/rss":
-			return 501;
-		case "/key":
 		case "/pgp":
-			send_file("public.key");
+			return 501;
 		case "/favicon.ico":
 			if (is_local_instance()) {
 				send_file("/static/icons/local.ico");
@@ -36,7 +31,13 @@ function main()
 			} // Fallthrough
 		default:
 			// TODO: README parser (cached)
-			send_file("static/index.html");
+			if (substr($agent, 0, 4) == "curl") {
+				send_file("install.sh");
+			} elseif ($sub == "pgp") {
+				send_file("public.key");
+			} else {
+				send_file("static/index.html");
+			}
 		}
 	} elseif ($type == "POST") {
 		return 405; // Method not allowed
