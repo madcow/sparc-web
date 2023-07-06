@@ -27,3 +27,9 @@ TODO: Switch to lighttpd or nginx
             AllowOverride All
         </Directory>
     </VirtualHost>
+
+## .htaccess
+
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/data
+    RewriteRule ^(.*)$ php/main.php [QSA,L]

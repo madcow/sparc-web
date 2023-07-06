@@ -9,7 +9,7 @@ function main()
 	$url   = $_SERVER["REQUEST_URI"];
 	$sub   = get_sub_domain();
 
-	if (strpos($agent, "curl")) {
+	if (substr($agent, 0, 4) == "curl") {
 		send_file("install.sh");
 	}
 
@@ -24,21 +24,16 @@ function main()
 			send_file("public.key");
 		case "/favicon.ico":
 			if (is_local_instance()) {
-				send_file("/icons/local.ico");
+				send_file("/static/icons/local.ico");
 			} else {
-				send_file("/icons/sparc.ico");
+				send_file("/static/icons/sparc.ico");
 			}
-
-		// Just for debugging
+		// Just for testing
 		case "/latest.tar.gz":
 		case "/latest.sha256":
 			if ($sub == "ftp") {
 				send_file($url);
-			}
-			break;
-		case "/fonts/terminus.woff":
-			send_file("/fonts/terminus.woff");
-
+			} // Fallthrough
 		default:
 			// TODO: README parser (cached)
 			send_file("static/index.html");

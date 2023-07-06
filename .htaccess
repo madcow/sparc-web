@@ -1,4 +1,3 @@
-RewriteEngine on
-
-RewriteCond %{HTTP_USER_AGENT} curl
-RewriteRule ^(.*) https://ftp.sparc.sh/install.sh [L,R]
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/data
+RewriteRule ^(.*)$ php/main.php [QSA,L]
